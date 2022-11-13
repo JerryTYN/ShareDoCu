@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    .product-img {
+        width: 100px;
+        height: 100px;
+    }
+</style>
+<div class="container">
+    <a href="{{url_for('logout')}}">Logout</a>
+    <div class="row">
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <form action="/add" method="POST" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <input class="form-control" type="text" name="name" placeholder="Name" required>
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-control" name="description" cols="100" placeholder="Add a Description"
+                                required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Select image</label>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" name="img_name" id="image">
+                                <label class="custom-file-label" for="customFileLang">Select Image...</label>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" type="submit">
+                            Add
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th></th>
+                        <th>Tên</th>
+                        <th>Mô tả</th>
+                        <th>Nhóm</th>
+                        <th>Tình trạng</th>
+                        <th>#</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for entry in entries %}
+                <tr>
+                    <td>{{ entry.Id }}</td>
+                    <td>
+                        <img class="product-img" src="static/images/products/{{ entry.ImageUrl }}" alt="">
+                    </td>
+                    <td><strong>{{ entry.Name }}</strong></td>
+                    <td>{{ entry.Description }}</td>
+                    <td>{{ entry.CategoryId }}</td>
+                    <td class="
+                        {% if entry.Status==1 %}
+                            btn-success
+                        {% elif entry.Status==2 %}
+                            btn-warning
+                        {% else %}
+                            btn-danger
+                        {% endif %}
+                    ">
+                        {% if entry.Status==1 %}
+                            Đang có sẵn
+                        {% elif entry.Status==2 %}
+                            Chờ người lấy
+                        {% else %}
+                            Đã cho
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a class="btn btn-dark"
+                           href="/turn/{{ entry.Id }}">
+                            Change status
+                        </a>
+                        <a class="btn btn-danger"
+                           href="/delete/{{ entry.Id }}">
+                            Delete
+                        </a>
+                        <a class="btn btn-info"
+                           href="/update/{{ entry.Id }}">
+                            Edit
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
